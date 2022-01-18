@@ -1,0 +1,32 @@
+ARG ARG_OS_BASE=buster
+ARG ARG_PHP_VERSION=8.0
+
+FROM php:${ARG_PHP_VERSION}-fpm-${ARG_OS_BASE}
+
+ENV APP_ROOT="/app"
+ENV APP_USER="www-data"
+ENV APP_GROUP="www-data"
+
+# Update System
+RUN set -ex \
+# Install Custom Packages
+    && apt-get update \
+    && apt-get install -qqy libzip4 libzip-dev \
+    && apt-get install -qqy supervisor \
+# Install composer
+    && curl https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
+# Enable extra PHP extensions
+    && pecl install zip \
+    && docker-php-ext-enable zip \
+# Create desired Application Root
+    && mkdir -p ${APP_ROOT}/var \
+    && chown -R ${APP_USER}:${APP_GROUP} ${APP_ROOT}
+
+USER root
+WORKDIR /app
+
+COPY conf/supervisor/php-fpm.conf /etc/supervisor/conf.d/php-fpm.conf
+
+#CMD [ "/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf" ]
+#composer create-project symfony/skeleton invest-backend
+

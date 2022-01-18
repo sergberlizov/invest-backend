@@ -1,0 +1,28 @@
+---
+version: '3'
+
+volumes:
+  data_mysql:
+
+services:
+  mysql:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: foobar
+      MYSQL_USER: investor
+      MYSQL_PASSWORD: foobar
+    ports:
+      - "10306:3306"
+
+  app:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.development
+      args:
+        APP_ENV: dev
+    ports:
+      - "10880:8080"
+    volumes:
+      - .:/app
+    depends_on:
+      - mysql
