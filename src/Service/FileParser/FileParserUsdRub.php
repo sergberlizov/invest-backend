@@ -15,8 +15,6 @@ class FileParserUsdRub extends FileParser
 
     private const PRICE_KEY = 1;
 
-    public const USD_RUB_00_21 = 'USD_RUB_00_21.csv';
-
     protected function parseRow(array $row): Ticker
     {
         return new Ticker(

@@ -15,8 +15,6 @@ class FileParserMoexDiv extends FileParser
 
     private const PRICE_KEY = 3;
 
-    public const FILE_NAME = 'MOEX_DIV_2000-2021.csv';
-
     protected function parseRow(array $row): Ticker
     {
         return new Ticker(

@@ -8,18 +8,6 @@ use App\Model\Ticker;
 
 class FileParser
 {
-    public const LUKOIL_ALL = 'LKOH_000101_201231.csv';
-
-    public const LUKOIL_FAST_GROW = 'LKOH_17_19.csv';
-
-    public const GAZPROM_ALL = 'GAZP_000101_201231.csv';
-
-    public const MOEX_ALL = 'IMOEX_790101_201231.csv';
-
-    public const SP500_ALL = 'SANDP-500_010101_201231.csv';
-
-    public const REALTY_MSC = 'Realty_Index_Msc_00_21.csv';
-
     protected const DELIMITER = ';';
 
     private const DATE_KEY = 0;
@@ -31,12 +19,18 @@ class FileParser
      */
     private array $fullTimeline = [];
 
-    public function parseCsv(string $path): array
+    private string $projectRoot;
+
+    public function __construct(string $projectRoot)
     {
-        var_dump(file_get_contents($path));
+        $this->projectRoot = $projectRoot;
+    }
+
+    public function parseCsv(string $fileName): array
+    {
+        $path = $this->projectRoot . '/tickers/' . $fileName;
         if (($handle = fopen($path, 'r')) !== FALSE) {
             while (($row = fgetcsv($handle, 1000, static::DELIMITER)) !== FALSE) {
-
                 $this->fullTimeline[] = $this->parseRow($row);
             }
             fclose($handle);

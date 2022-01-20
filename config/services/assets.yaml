@@ -14,64 +14,58 @@ services:
     assets.usd_rub:
         class: 'App\Service\InvestingAsset'
         arguments:
-            $label: !php/const \App\Enum\AssetTypeEnum::USD_RUB
+            $type: !php/const \App\Enum\AssetTypeEnum::USD_RUB
             $historicalTimeline: '@App\Model\HistoricalTimeline'
             $historicalCalculator: '@App\Service\HistoricalCalculator'
             $fileParser: '@App\Service\FileParser\FileParserUsdRub'
-            $fileName: !php/const \App\Service\FileParser\FileParserUsdRub::USD_RUB_00_21
 
     assets.moex:
         class: 'App\Service\InvestingAsset'
         arguments:
-            $label: !php/const \App\Enum\AssetTypeEnum::MOEX
+            $type: !php/const \App\Enum\AssetTypeEnum::MOEX
             $historicalTimeline: '@App\Model\HistoricalTimeline'
             $historicalCalculator: '@App\Service\HistoricalCalculator'
             $fileParser: '@App\Service\FileParser\FileParserMoex'
-            $fileName: !php/const \App\Service\FileParser::MOEX_ALL
 
     assets.moex_div:
         class: 'App\Service\InvestingAsset'
         arguments:
-            $label: !php/const \App\Enum\AssetTypeEnum::MOEX_DIV
+            $type: !php/const \App\Enum\AssetTypeEnum::MOEX_DIV
             $historicalTimeline: '@App\Model\HistoricalTimeline'
             $historicalCalculator: '@App\Service\HistoricalCalculator'
             $fileParser: '@App\Service\FileParser\FileParserMoexDiv'
-            $fileName: !php/const \App\Service\FileParser\FileParserMoexDiv::FILE_NAME
 
     assets.ru_3y_bonds:
         class: 'App\Service\InvestingAsset'
         arguments:
-            $label: !php/const \App\Enum\AssetTypeEnum::RU_3Y_BONDS
+            $type: !php/const \App\Enum\AssetTypeEnum::RU_3Y_BONDS
             $historicalTimeline: '@assets.timeline.3y_bonds'
             $historicalCalculator: '@App\Service\HistoricalCalculator\BondsHistoricalCalculator'
             $fileParser: '@App\Service\FileParser\FileParserBonds'
-            $fileName: !php/const \App\Service\FileParser\FileParserBonds::RU_3Y_BONDS
 
     assets.prices:
         class: 'App\Service\InvestingAsset'
         arguments:
-            $label: !php/const \App\Enum\AssetTypeEnum::PRICES
+            $type: !php/const \App\Enum\AssetTypeEnum::PRICES
             $historicalTimeline: '@App\Model\HistoricalTimeline'
             $historicalCalculator: '@App\Service\HistoricalCalculator'
-            $fileParser: '@App\Service\FileParser\FileParserInflation'
-            $fileName: !php/const \App\Service\FileParser\FileParserInflation::FILE_NAME
+            $fileParser: '@App\Service\FileParser\FileParserSimple'
 
     assets.realty_msc:
         class: 'App\Service\InvestingAsset'
         arguments:
-            $label: !php/const \App\Enum\AssetTypeEnum::REALTY_MSC
+            $type: !php/const \App\Enum\AssetTypeEnum::REALTY_MSC
             $historicalTimeline: '@App\Model\HistoricalTimeline'
             $historicalCalculator: '@App\Service\HistoricalCalculator'
             $fileParser: '@App\Service\FileParser\FileParserSimple'
-            $fileName: !php/const \App\Service\FileParser::REALTY_MSC
 
-    App\Service\AssetsComparator:
+    App\Service\AssetsHolder:
         calls:
-            - [ addAsset, [ !php/const \App\Enum\AssetTypeEnum::USD_RUB, '@assets.usd_rub' ] ]
-            - [ addAsset, [ !php/const \App\Enum\AssetTypeEnum::MOEX, '@assets.moex' ] ]
-            - [ addAsset, [ !php/const \App\Enum\AssetTypeEnum::MOEX_DIV, '@assets.moex_div' ] ]
-            - [ addAsset, [ !php/const \App\Enum\AssetTypeEnum::RU_3Y_BONDS, '@assets.ru_3y_bonds' ] ]
-            - [ addAsset, [ !php/const \App\Enum\AssetTypeEnum::PRICES, '@assets.prices' ] ]
-            - [ addAsset, [ !php/const \App\Enum\AssetTypeEnum::REALTY_MSC, '@assets.realty_msc' ] ]
+            - [ addAsset, ['@assets.usd_rub']]
+            - [ addAsset, [ '@assets.moex' ] ]
+            - [ addAsset, [ '@assets.moex_div' ] ]
+            - [ addAsset, [ '@assets.ru_3y_bonds' ] ]
+            - [ addAsset, [ '@assets.prices' ] ]
+            - [ addAsset, [ '@assets.realty_msc' ] ]
 
 

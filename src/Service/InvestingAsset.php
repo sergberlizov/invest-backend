@@ -11,13 +11,12 @@ use App\Model\HistoricalTimeline;
 class InvestingAsset
 {
     public function __construct(
-        private string $label,
+        private string $type,
         private HistoricalTimeline $historicalTimeline,
         private HistoricalCalculator $historicalCalculator,
         private FileParser $fileParser,
-        string $fileName
     ) {
-        $timeline = $this->fileParser->parseCsv('tickers/' . $fileName);
+        $timeline = $this->fileParser->parseCsv( $type . '.csv');
         $this->getHistoricalTimeline()->setTimeline($timeline);
     }
 
@@ -48,9 +47,14 @@ class InvestingAsset
         }
     }
 
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
     public function getLabel(): string
     {
-        return $this->label;
+        return $this->type;
     }
 
 }

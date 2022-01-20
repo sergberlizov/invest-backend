@@ -12,7 +12,7 @@ RUN set -ex \
 # Install Custom Packages
     && apt-get update \
     && apt-get install -qqy libzip4 libzip-dev \
-    && apt-get install -qqy supervisor \
+    && apt-get install -qqy supervisor nginx\
 # Install composer
     && curl https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
 # Enable extra PHP extensions
@@ -25,7 +25,7 @@ RUN set -ex \
 USER root
 WORKDIR /app
 
-COPY conf/supervisor/php-fpm.conf /etc/supervisor/conf.d/php-fpm.conf
+COPY conf/nginx/nginx.conf /etc/nginx/sites-available/default
 
 #CMD [ "/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf" ]
 #composer create-project symfony/skeleton invest-backend

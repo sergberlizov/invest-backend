@@ -15,8 +15,6 @@ class FileParserBonds extends FileParser
 
     private const PRICE_KEY = 1;
 
-    public const RU_3Y_BONDS = 'RU_3Y_BONDS.csv';
-
     protected function parseRow(array $row): Ticker
     {
         return new Ticker(
