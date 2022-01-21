@@ -26,7 +26,9 @@ USER root
 WORKDIR /app
 
 COPY conf/nginx/nginx.conf /etc/nginx/sites-available/default
+COPY conf/supervisor/ /etc/supervisor/
 
-#CMD [ "/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf" ]
+CMD [ "/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf" ]
+
 #composer create-project symfony/skeleton invest-backend
 
