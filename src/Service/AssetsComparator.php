@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Service;
 
 
+use App\Model\Api\Response\Asset\AssetsCompareItemResponse;
+use App\Model\Api\Response\Asset\AssetsCompareValueResponse;
 use Symfony\Component\Serializer\Encoder\EncoderInterface;
 
 class AssetsComparator
@@ -21,18 +23,18 @@ class AssetsComparator
         ?\DateTimeInterface $startDate = null
     ): array {
         $csvData = [];
-        printf("%s vs %s \n\n",$asset1->getType(), $asset2->getType());
+       // printf("%s vs %s \n\n",$asset1->getType(), $asset2->getType());
         if (!$startDate) {
             $startDate = max($asset1->getHistoricalTimeline()->getFirstDate(), $asset2->getHistoricalTimeline()->getFirstDate());
         }
         $finishDate = min($asset1->getHistoricalTimeline()->getLastDate(), $asset2->getHistoricalTimeline()->getLastDate());
 
-        printf("Start date %s\n\n", $startDate->format('m-Y'));
-        $csvData[] = [
-            $asset1->getType(),
-            $asset2->getType(),
-            $startDate->format('m.Y')
-        ];
+       // printf("Start date %s\n\n", $startDate->format('m-Y'));
+//        $csvData[] = [
+//            $asset1->getType(),
+//            $asset2->getType(),
+//            $startDate->format('m.Y')
+//        ];
         for ($periodDuration = 1; $periodDuration <= $maxPeriodDurationYears; $periodDuration++) {
             $startDateForPeriod = clone $startDate;
             $finishDateForPeriod = clone $finishDate;
@@ -61,11 +63,11 @@ class AssetsComparator
                 $startDateForPeriod->modify('+1 month');
                 $periodsCount++;
             }
-            printf("Periods won (count): %d years - %s : %s, \n\n",
-                $periodDuration,
-                $wins['asset1'],
-                $wins['asset2']
-            );
+//            printf("Periods won (count): %d years - %s : %s, \n\n",
+//                $periodDuration,
+//                $wins['asset1'],
+//                $wins['asset2']
+//            );
 
            $periodScore = [
                'asset1' => round(100 * $wins['asset1'] / ($wins['asset1'] + $wins['asset2'])),
@@ -73,11 +75,11 @@ class AssetsComparator
            ];
 
 
-            printf("Periods won (percent): %d years - %s : %s, \n\n",
-                $periodDuration,
-                $periodScore['asset1'],
-                $periodScore['asset2']
-            );
+//            printf("Periods won (percent): %d years - %s : %s, \n\n",
+//                $periodDuration,
+//                $periodScore['asset1'],
+//                $periodScore['asset2']
+//            );
             sort($totalProfit['asset1']);
             sort($totalProfit['asset2']);
 
@@ -85,19 +87,23 @@ class AssetsComparator
                 'asset1' => round((100 * $totalProfit['asset1'][floor($periodsCount / 2)] - 100)),
                 'asset2' => round((100 * $totalProfit['asset2'][floor($periodsCount / 2)] - 100)),
             ];
-            printf("median yield: %d years - %s : %s, \n\n",
-                $periodDuration,
-                $medianYield['asset1'],
-                $medianYield['asset2']
-            );
+//            printf("median yield: %d years - %s : %s, \n\n",
+//                $periodDuration,
+//                $medianYield['asset1'],
+//                $medianYield['asset2']
+//            );
 
-            $csvData[] = [
-                $periodDuration,
-                $periodScore['asset1'],
-                $periodScore['asset2'],
-                $medianYield['asset1'],
-                $medianYield['asset2'],
-            ];
+            $csvData[] = new AssetsCompareItemResponse((string) $periodDuration, [
+                new AssetsCompareValueResponse($asset1->getType(), $periodScore['asset1']),
+                new AssetsCompareValueResponse($asset2->getType(), $periodScore['asset2']),
+            ]);
+//            $csvData[] = [
+//                $periodDuration,
+//                $periodScore['asset1'],
+//                $periodScore['asset2'],
+//                $medianYield['asset1'],
+//                $medianYield['asset2'],
+//            ];
         }
 
         //file_put_contents('var/files/score', $this->csvEncoder->encode($csvData, 'csv'));
